@@ -1,6 +1,7 @@
 'use strict';
 //---------------------------------Global Declarations---------------------------------//
 MallItem.allItems = [];
+var itemHistory = [];
 
 var mallParent = document.getElementById('mall');
 var leftMall = document.getElementById('left');
@@ -12,9 +13,9 @@ var centerIndex = null;
 var rightIndex = null;
 
 var mallVotes = 0;
-var totalRounds = 5;
+var totalRounds = 25;
 
-console.log('Array of all items', MallItem.allItems);
+// console.log('Array of all items', MallItem.allItems);
 
 //--------------------------------Constructor Function----------------------------------//
 function MallItem(name,source){
@@ -54,61 +55,79 @@ console.log('Random Item #:',randomItem());
 
 //------------------------------Render Mall Item Images----------------------------------//
 function renderItems(){
+    //Ensures that there is 3 different images.
+    
+    historyQuery();
+    //if you have made it to this point, should have 3 different images and images will render.
+    leftMall.src = MallItem.allItems[leftIndex].source;
+    MallItem.allItems[leftIndex].views++;
+    
+    centerMall.src = MallItem.allItems[centerIndex].source;
+    MallItem.allItems[centerIndex].views++;
+    
+    rightMall.src  = MallItem.allItems[rightIndex].source;
+    MallItem.allItems[rightIndex].views++;
+    
+    //------------------------------Prevent Consecutive Views---------------------------------//
+    
+    // console.log(itemHistory);
+    console.log('mall items.allitems', MallItem.allItems);
+};
+function historyQuery(){
+    do {
+        var duplicateFound = false;//Assumption that images are not duplicate or in prior history
+        do {// checks if there are any duplicates in current cycle
+            leftIndex = randomItem();
+            centerIndex = randomItem();
+            rightIndex = randomItem();
+            }while (leftIndex === rightIndex || centerIndex === leftIndex ||  centerIndex === rightIndex);
 
-var itemArray = [];
-itemArray[0] = randomItem();
-itemArray[1] = randomItem();
 
-while (itemArray[0] === itemArray[1]){
-    itemArray[1] = randomItem();
+        for (var i=0; i<itemHistory.length; i++){// verifys duplicates in next cycle
+            if (leftIndex === itemHistory[i] || centerIndex === itemHistory[i] || rightIndex === itemHistory[i]){
+                duplicateFound = true;
+            }
+        }
+} while (duplicateFound === true);
+
+
+itemHistory.unshift(leftIndex,centerIndex,rightIndex);
+if (itemHistory.length > 6){
+itemHistory.pop();
+itemHistory.pop();
+itemHistory.pop();
 }
-itemArray[2] = randomItem();
-
-while (itemArray[1] === itemArray[2] || itemArray[0] === itemArray[2]){
-itemArray[2] = randomItem();
 }
 
-leftMall.src = MallItem.allItems[itemArray[0]].source;
-centerMall.src = MallItem.allItems[itemArray[1]].source;
-rightMall.src = MallItem.allItems[itemArray[2]].source;
-
-leftMall.title = MallItem.allItems[itemArray[0]].name
-centerMall.title = MallItem.allItems[itemArray[1]].name
-rightMall.title = MallItem.allItems[itemArray[2]].name
-}
 //------------------------------Creation of Click Function-------------------------------//
 var handleClickOnItem = function(event){
-    var itemClicked = event.target.id;
-    var title = event.target.title;
- 
-    console.log(leftMall.title)
-    console.log(centerMall.title) 
-    console.log(rightMall.title)
-    
-    // if(title)
-    
-    if(itemClicked === leftMall || itemClicked === centerMall || itemClicked === rightMall){
+    var itemClicked = event.target.id;//left right or center
+
+    if(itemClicked === leftMall.id || itemClicked === centerMall.id || itemClicked === rightMall.id){
         mallVotes++;
-        if(itemClicked === leftMall){
-            MallItem.allItems.clicked++;
+
+        if(itemClicked === 'left'){
+            MallItem.allItems[leftIndex].clicked++;
         }
-        else if(itemClicked === centerMall){
-            MallItem.allItems.clicked++;
+        else if(itemClicked === 'center'){
+            MallItem.allItems[centerIndex].clicked++;
         }
-        else if(itemClicked === rightMall){
-            MallItem.allItems.clicked++;
+        else if(itemClicked === 'right'){
+            MallItem.allItems[rightIndex].clicked++;
         }
         else{
             alert('You clicked incorrectly');
         }
     }
+// console.log(mallVotes);
+
     if(mallVotes === totalRounds){
-        mallParent.removeEventListener('click',handleClickOnItem);
+        mallParent.removeEventListener('click', handleClickOnItem);
         alert('Thank you for your votes');
         
         for (var i=0; i<MallItem.allItems.length; i++){
             var item = MallItem.allItems[i];
-            console.log('${item.name} received ${item.clicked} votes with ${goat.views} views.');
+            console.log(`${item.name} received ${item.clicked} votes with ${item.views} views.`);
         }
     }else {
         renderItems();
@@ -119,6 +138,47 @@ var handleClickOnItem = function(event){
 
 
 
-//----------------------------------Executable Code---------------------------------//
+//-------------------------------------Executable Code------------------------------------//
 renderItems();
-mallParent.addEventListener('click', handleClickOnItem);
+mallParent.addEventListener('click', handleClickOnItem, true);
+//----------------------------Chart JS & THML Canvas Lab----------------------------------//
+
+function renderChart() {
+    var labelData = [];
+    var clickData = [];
+    var viewData = [];
+    for (var i = 0; i < MallItem.allItems.length; i++) {
+      labelData.push(MallItem.allItems[i].name);
+      clickData.push(MallItem.allItems[i].clicked);
+      viewData.push(MallItem.allItems[i].views);
+    }
+  
+    var ctx = document.getElementById('my-chart').getContext('2d');
+  
+    new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: labelData,
+        datasets: [{
+          label: '# of Clicks',
+          data: clickData,
+          backgroundColor: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange','Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange','Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+        }, {
+          label: '# of Views',
+          data: viewData,
+          backgroundColor: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange','Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange','Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+        }]
+      },
+      options: {
+        scales: {
+          yAxes: [{
+            ticks: {
+              beginAtZero: true
+            }
+          }]
+        }
+      }
+    })
+  }
+  
+  renderChart();
