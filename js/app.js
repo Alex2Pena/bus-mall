@@ -14,9 +14,7 @@ var rightIndex = null;
 
 var mallVotes = 0;
 var totalRounds = 25;
-
 // console.log('Array of all items', MallItem.allItems);
-
 //--------------------------------Constructor Function----------------------------------//
 function MallItem(name,source){
     this.name = name;
@@ -25,7 +23,26 @@ function MallItem(name,source){
     this.views =  0;
 //-----------------------------Add new "MallItem" to array------------------------------//
     MallItem.allItems.push(this);
-}
+//---------------------------------Local Storage-Lab 13--------------------------------//
+  }
+
+//This function translates array to JSON string
+  function updateStorage(){
+    var itemsString = JSON.stringify(MallItem.allItems);
+//Store new string array into Local Storage
+    localStorage.setItem('products',itemsString);
+  }
+//retreive string array and convert back to objects
+  function getItemsBack(){
+    if (localStorage.length > 0)
+    var getItems = localStorage.getItem('products');
+//Use JSON Parse to convert strings back to objects
+    var objectItems = JSON.parse(getItems);
+//Set current array to data from local storage
+    MallItem.allItems = objectItems;
+//present items back to DOM
+    renderItems();
+  }
 //------------------------Instantiating new Mall Items into Array-----------------------//
 new MallItem('R2D2 Luggage', '/img/bag.jpg');
 new MallItem('Banana Slicer', '/img/banana.jpg');
@@ -82,7 +99,6 @@ function historyQuery(){
             rightIndex = randomItem();
             }while (leftIndex === rightIndex || centerIndex === leftIndex ||  centerIndex === rightIndex);
 
-
         for (var i=0; i<itemHistory.length; i++){// verifys duplicates in next cycle
             if (leftIndex === itemHistory[i] || centerIndex === itemHistory[i] || rightIndex === itemHistory[i]){
                 duplicateFound = true;
@@ -108,19 +124,14 @@ var handleClickOnItem = function(event){
 
         if(itemClicked === 'left'){
             MallItem.allItems[leftIndex].clicked++;
-        }
-        else if(itemClicked === 'center'){
+        }else if(itemClicked === 'center'){
             MallItem.allItems[centerIndex].clicked++;
-        }
-        else if(itemClicked === 'right'){
+        }else if(itemClicked === 'right'){
             MallItem.allItems[rightIndex].clicked++;
-        }
-        else{
+        }else{
             alert('You clicked incorrectly');
         }
     }
-// console.log(mallVotes);
-
     if(mallVotes === totalRounds){
         mallParent.removeEventListener('click', handleClickOnItem);
         alert('Thank you for your votes');
@@ -133,16 +144,17 @@ var handleClickOnItem = function(event){
         renderItems();
     }
     console.log('Item Clicked:', itemClicked);
+    updateStorage();
+
 }
 // console.log('Mall Votes:', mallVotes, 'Total Rounds:', totalRounds);
-
-
 
 //-------------------------------------Executable Code------------------------------------//
 renderItems();
 mallParent.addEventListener('click', handleClickOnItem, true);
 //----------------------------Chart JS & THML Canvas Lab----------------------------------//
-
+var button = document.getElementById('button');
+button.addEventListener('click', renderChart);
 function renderChart() {
     var labelData = [];
     var clickData = [];
@@ -181,4 +193,3 @@ function renderChart() {
     })
   }
   
-  renderChart();
