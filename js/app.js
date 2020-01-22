@@ -14,9 +14,7 @@ var rightIndex = null;
 
 var mallVotes = 0;
 var totalRounds = 25;
-
 // console.log('Array of all items', MallItem.allItems);
-
 //--------------------------------Constructor Function----------------------------------//
 function MallItem(name,source){
     this.name = name;
@@ -25,7 +23,26 @@ function MallItem(name,source){
     this.views =  0;
 //-----------------------------Add new "MallItem" to array------------------------------//
     MallItem.allItems.push(this);
-}
+//---------------------------------Local Storage-Lab 13--------------------------------//
+  }
+
+//This function translates array to JSON string
+  function updateStorage(){
+    var itemsString = JSON.stringify(MallItem.allItems);
+//Store new string array into Local Storage
+    localStorage.setItem('products',itemsString);
+  }
+//retreive string array and convert back to objects
+  function getItemsBack(){
+    if (localStorage.length > 0)
+    var getItems = localStorage.getItem('products');
+//Use JSON Parse to convert strings back to objects
+    var objectItems = JSON.parse(getItems);
+//Set current array to data from local storage
+    MallItem.allItems = objectItems;
+//present items back to DOM
+    renderItems();
+  }
 //------------------------Instantiating new Mall Items into Array-----------------------//
 new MallItem('R2D2 Luggage', '/img/bag.jpg');
 new MallItem('Banana Slicer', '/img/banana.jpg');
@@ -127,10 +144,10 @@ var handleClickOnItem = function(event){
         renderItems();
     }
     console.log('Item Clicked:', itemClicked);
+    updateStorage();
+
 }
 // console.log('Mall Votes:', mallVotes, 'Total Rounds:', totalRounds);
-
-
 
 //-------------------------------------Executable Code------------------------------------//
 renderItems();
@@ -175,5 +192,4 @@ function renderChart() {
       }
     })
   }
-  //---------------------------------Local Storage-Lab 13--------------------------------//
-  //Target data
+  
