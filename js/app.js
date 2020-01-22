@@ -82,7 +82,6 @@ function historyQuery(){
             rightIndex = randomItem();
             }while (leftIndex === rightIndex || centerIndex === leftIndex ||  centerIndex === rightIndex);
 
-
         for (var i=0; i<itemHistory.length; i++){// verifys duplicates in next cycle
             if (leftIndex === itemHistory[i] || centerIndex === itemHistory[i] || rightIndex === itemHistory[i]){
                 duplicateFound = true;
@@ -108,19 +107,14 @@ var handleClickOnItem = function(event){
 
         if(itemClicked === 'left'){
             MallItem.allItems[leftIndex].clicked++;
-        }
-        else if(itemClicked === 'center'){
+        }else if(itemClicked === 'center'){
             MallItem.allItems[centerIndex].clicked++;
-        }
-        else if(itemClicked === 'right'){
+        }else if(itemClicked === 'right'){
             MallItem.allItems[rightIndex].clicked++;
-        }
-        else{
+        }else{
             alert('You clicked incorrectly');
         }
     }
-// console.log(mallVotes);
-
     if(mallVotes === totalRounds){
         mallParent.removeEventListener('click', handleClickOnItem);
         alert('Thank you for your votes');
@@ -142,7 +136,8 @@ var handleClickOnItem = function(event){
 renderItems();
 mallParent.addEventListener('click', handleClickOnItem, true);
 //----------------------------Chart JS & THML Canvas Lab----------------------------------//
-
+var button = document.getElementById('button');
+button.addEventListener('click', renderChart);
 function renderChart() {
     var labelData = [];
     var clickData = [];
@@ -180,5 +175,5 @@ function renderChart() {
       }
     })
   }
-  
-  renderChart();
+  //---------------------------------Local Storage-Lab 13--------------------------------//
+  //Target data

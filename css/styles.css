@@ -32,5 +32,8 @@ section {
     width: 908px;
     margin-left: 20%;
     margin-right: 20%;
-   
-#mall
+}
+#button {
+    height: 30px;
+    font-size: 20px;
+}
