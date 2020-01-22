@@ -1,3 +1,36 @@
-img{
-    width: 250px;
+body {
+    background-color: rgb(131, 174, 187);
+    color: white;
 }
+nav {
+    margin-left: 30%;
+    margin-right: 20%;
+    text-align: center;
+}
+h1 {
+    font-size: 5em;
+    margin-bottom: 0;
+    font-family: fantasy;
+    color: yellow;
+}
+h2 {
+    color: violet;
+    font-family: monospace;
+    font-size: 2em;
+}
+p {
+    font-size: 2em;
+    color: tomato;
+}
+img {
+    width: 300px;
+    height: 300px;
+}
+section {
+    border: 10px;
+    border-style: groove;
+    width: 908px;
+    margin-left: 20%;
+    margin-right: 20%;
+   
+#mall
