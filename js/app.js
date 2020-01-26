@@ -68,7 +68,7 @@ function randomItem(){
     return randomNumber;
 }
 
-console.log('Random Item #:',randomItem());
+// console.log('Random Item #:',randomItem());
 
 //------------------------------Render Mall Item Images----------------------------------//
 function renderItems(){
@@ -88,7 +88,7 @@ function renderItems(){
     //------------------------------Prevent Consecutive Views---------------------------------//
     
     // console.log(itemHistory);
-    console.log('mall items.allitems', MallItem.allItems);
+    // console.log('mall items.allitems', MallItem.allItems);
 };
 function historyQuery(){
     do {
@@ -102,94 +102,94 @@ function historyQuery(){
         for (var i=0; i<itemHistory.length; i++){// verifys duplicates in next cycle
             if (leftIndex === itemHistory[i] || centerIndex === itemHistory[i] || rightIndex === itemHistory[i]){
                 duplicateFound = true;
+              }
             }
+          } while (duplicateFound === true);
+          
+          
+          itemHistory.unshift(leftIndex,centerIndex,rightIndex);
+          if (itemHistory.length > 6){
+            itemHistory.pop();
+            itemHistory.pop();
+            itemHistory.pop();
+          }
         }
-} while (duplicateFound === true);
-
-
-itemHistory.unshift(leftIndex,centerIndex,rightIndex);
-if (itemHistory.length > 6){
-itemHistory.pop();
-itemHistory.pop();
-itemHistory.pop();
-}
-}
-
-//------------------------------Creation of Click Function-------------------------------//
-var handleClickOnItem = function(event){
-    var itemClicked = event.target.id;//left right or center
-
-    if(itemClicked === leftMall.id || itemClicked === centerMall.id || itemClicked === rightMall.id){
-        mallVotes++;
-
-        if(itemClicked === 'left'){
-            MallItem.allItems[leftIndex].clicked++;
-        }else if(itemClicked === 'center'){
-            MallItem.allItems[centerIndex].clicked++;
-        }else if(itemClicked === 'right'){
-            MallItem.allItems[rightIndex].clicked++;
-        }else{
-            alert('You clicked incorrectly');
-        }
-    }
-    if(mallVotes === totalRounds){
-        mallParent.removeEventListener('click', handleClickOnItem);
-        alert('Thank you for your votes');
         
-        for (var i=0; i<MallItem.allItems.length; i++){
-            var item = MallItem.allItems[i];
-            console.log(`${item.name} received ${item.clicked} votes with ${item.views} views.`);
-        }
-    }else {
-        renderItems();
-    }
-    console.log('Item Clicked:', itemClicked);
-    updateStorage();
-
-}
-// console.log('Mall Votes:', mallVotes, 'Total Rounds:', totalRounds);
-
-//-------------------------------------Executable Code------------------------------------//
-renderItems();
-mallParent.addEventListener('click', handleClickOnItem, true);
-//----------------------------Chart JS & THML Canvas Lab----------------------------------//
-var button = document.getElementById('button');
-button.addEventListener('click', renderChart);
-function renderChart() {
-    var labelData = [];
-    var clickData = [];
-    var viewData = [];
-    for (var i = 0; i < MallItem.allItems.length; i++) {
-      labelData.push(MallItem.allItems[i].name);
-      clickData.push(MallItem.allItems[i].clicked);
-      viewData.push(MallItem.allItems[i].views);
-    }
-  
-    var ctx = document.getElementById('my-chart').getContext('2d');
-  
-    new Chart(ctx, {
-      type: 'bar',
-      data: {
-        labels: labelData,
-        datasets: [{
-          label: '# of Clicks',
-          data: clickData,
-          backgroundColor: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange','Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange','Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
-        }, {
-          label: '# of Views',
-          data: viewData,
-          backgroundColor: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange','Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange','Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
-        }]
-      },
-      options: {
-        scales: {
-          yAxes: [{
-            ticks: {
-              beginAtZero: true
+        //------------------------------Creation of Click Function-------------------------------//
+        var handleClickOnItem = function(event){
+          var itemClicked = event.target.id;//left right or center
+          
+          if(itemClicked === leftMall.id || itemClicked === centerMall.id || itemClicked === rightMall.id){
+            mallVotes++;
+            
+            if(itemClicked === 'left'){
+              MallItem.allItems[leftIndex].clicked++;
+            }else if(itemClicked === 'center'){
+              MallItem.allItems[centerIndex].clicked++;
+            }else if(itemClicked === 'right'){
+              MallItem.allItems[rightIndex].clicked++;
+            }else{
+              alert('You clicked incorrectly');
             }
-          }]
+          }
+          if(mallVotes === totalRounds){
+            mallParent.removeEventListener('click', handleClickOnItem);
+            alert('Thank you for your votes');
+            
+            for (var i=0; i<MallItem.allItems.length; i++){
+              var item = MallItem.allItems[i];
+              console.log(`${item.name} received ${item.clicked} votes with ${item.views} views.`);
+            }
+          }else {
+            renderItems();
+          }
+          // console.log('Item Clicked:', itemClicked);
+          updateStorage();
+          
+          console.log(event);
         }
-      }
-    })
-  }
-  
+        // console.log('Mall Votes:', mallVotes, 'Total Rounds:', totalRounds);
+        
+        //-------------------------------------Executable Code------------------------------------//
+        renderItems();
+        mallParent.addEventListener('click', handleClickOnItem, true);
+        //----------------------------Chart JS & THML Canvas Lab----------------------------------//
+        var button = document.getElementById('button');
+        button.addEventListener('click', renderChart);
+        function renderChart() {
+          var labelData = [];
+          var clickData = [];
+          var viewData = [];
+          for (var i = 0; i < MallItem.allItems.length; i++) {
+            labelData.push(MallItem.allItems[i].name);
+            clickData.push(MallItem.allItems[i].clicked);
+            viewData.push(MallItem.allItems[i].views);
+          }
+          
+          var ctx = document.getElementById('my-chart').getContext('2d');
+          
+          new Chart(ctx, {
+            type: 'bar',
+            data: {
+              labels: labelData,
+              datasets: [{
+                label: '# of Clicks',
+                data: clickData,
+                backgroundColor: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange','Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange','Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+              }, {
+                label: '# of Views',
+                data: viewData,
+                backgroundColor: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange','Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange','Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+              }]
+            },
+            options: {
+              scales: {
+                yAxes: [{
+                  ticks: {
+                    beginAtZero: true
+                  }
+                }]
+              }
+            }
+          })
+        }
